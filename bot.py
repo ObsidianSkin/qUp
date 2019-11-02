@@ -1,21 +1,39 @@
+"""
+-print !help 1 time
+-get guild bot is in
+-add functionality to qUp command
+"""
 # bot.py
 import os
 
-import discord
+#import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+#GUILD = os.getenv('DISCORD_GUILD')
 
-client = discord.Client()
-
-@client.event
+#client = discord.Client()
+bot = commands.Bot(command_prefix='!')
+"""
+@bot.event
 async def on_ready():
-    guild = discord.utils.get(client.guilds, name=GUILD)
+    #guild = discord.utils.get(bot.guilds, name=GUILD)
     print(
-        f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
+        f'{bot.user.name} is connected to the following guild:\n'
+        #f'{guild.name}(id: {guild.id})'
     )
+"""
+@bot.command(name='qUp', help='Finds friends who are looking to play games!')
+async def queue_up(ctx):
+    response = 'testing...123'
+    await ctx.send(response)
 
-client.run(TOKEN)
+bot.run(TOKEN)
+"""
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+"""
