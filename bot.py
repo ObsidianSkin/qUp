@@ -18,7 +18,10 @@
 """
 # bot.py
 import os
-
+#import sys
+#sys.path.append('/Pyrebase/')
+from firebase import firebase
+firebase = firebase.FirebaseApplication('https://queueup-e5650.firebaseio.com/', None)
 import discord
 import pprint
 from discord.ext import commands
