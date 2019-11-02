@@ -26,8 +26,8 @@ async def on_ready():
     )
 """
 @bot.command(name='qUp', help='Finds friends who are looking to play games!')
-async def queue_up(ctx):
-    response = 'testing...123'
+async def queue_up(ctx, game, number_of_players):
+    response = f'{ctx.author} wants {number_of_players} people to play {game}!'
     await ctx.send(response)
 
 bot.run(TOKEN)
