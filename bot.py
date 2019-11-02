@@ -12,12 +12,14 @@
 import os
 
 import discord
+import pprint
 from discord.ext import commands
 from dotenv import load_dotenv
 
+pp = pprint.PrettyPrinter()
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-#GUILD = os.getenv('DISCORD_GUILD')
+GUILD = os.getenv('DISCORD_GUILD')
 
 #client = discord.Client()
 bot = commands.Bot(command_prefix='!')
@@ -28,13 +30,24 @@ num_players = 0
 user_ids = []
 author = ''
 
+def get_member_list(members):
+    inactive = 0
+    for member in members:
+        if member.activity is None:
+            inactive += 1
+        else:
+            pp.pprint(member.activity)
+
+    pp.pprint(f'inactive players {inactive}')
+
 @bot.event
 async def on_ready():
-    #guild = discord.utils.get(bot.guilds, name=GUILD)
+    guild = discord.utils.get(bot.guilds, name=GUILD)
     print(
         f'{bot.user.name} is connected to the following guild:\n'
         #f'{guild.name}(id: {guild.id})'
     )
+    get_member_list(guild.members)
 
 def get_emoji(number_of_players):
     #await msg.clear_reactions()
@@ -77,26 +90,6 @@ async def queue_up(ctx, game, number_of_players: int):
     author = ctx.author
     text = f'{ctx.author} wants {number_of_players} people to play {game}!'
     msg = await ctx.send(text)
-    """
-    emoji = ''
-    def switch_emoji(number_of_players):
-        switcher = {
-            0: '0⃣',
-            1: '1⃣',
-            2: '2⃣',
-            3: '3⃣',
-            4: '4⃣',
-            5: '5⃣',
-            6: '6⃣',
-            7: '7⃣',
-            8: '8⃣',
-            9: '9⃣',
-            10: '🔟',
-        }
-        print(number_of_players)
-        emoji = switcher.get(number_of_players)
-        #print(emoji)
-    """
 
     #lovely block of garbage :)
     if num_players == 0:
@@ -124,28 +117,18 @@ async def queue_up(ctx, game, number_of_players: int):
     else:
         await msg.add_reaction('🍆')
 
-    #get_emoji(number_of_players)
-
-    #switch_emoji(number_of_players)
-    #await msg.add_reaction('💯')
-    #await msg.add_reaction(emoji)
-    #await msg.add_reaction('0⃣')
     msg_id = msg.id
-    #print(msg.id)
 
 @bot.event
 async def on_raw_reaction_add(payload):
     global msg
     global num_players
     global author
-    #global num_players
+
     message_id = payload.message_id
     message = ''
-    #print(f'{message_id}\n{msg_id}')
-    # and payload.user_id != bot.user_id
-    #print(payload.user_id)
+
     if message_id == msg_id and payload.user_id != 640022874631176193:
-        #print('wow')
         print(num_players)
         user_ids.append(payload.user_id)
         if(num_players == 0):
