@@ -39,7 +39,7 @@ guild = ''
 msg = '' #msg that holds reactions and changes when timer runs out/squad is full
 msg_id = 0 #tracks reactions on specific bot message (<msg.id>)
 num_players = 0 #number of players request at the time of !qUp
-user_ids = [] #user_ids of players who've reacted
+user_ids = [] #user_ids of players who've reacted (not including author. user_ids only counts additional players)
 author = '' #user who called !qUp ...
 game_name = '' #name of game (<name>) to be played
 
@@ -61,12 +61,14 @@ def get_member_list(members):
         #loop through user_ids and compare to get eagerness
         eagerness = False
         for id in user_ids:
-            if id == member.id:
+            if id == member.id or id == author.id:
                 eagerness = True
         member_attributes.append(eagerness) #eagerness
 
         member_attributes.append(guild) #server => same for everyone
         member_attributes.append(member.avatar) #avatar
+
+
 
         if member.activity is None:
             inactive += 1
