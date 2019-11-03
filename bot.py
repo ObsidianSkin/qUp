@@ -25,34 +25,22 @@
 """
 # bot.py
 import os
-#import sys
-#sys.path.append('/Pyrebase/')
-#from firebase.firebase import FirebaseApplication
-#from firebase.firebase import FirebaseAuthentication
-#app = FirebaseApplication('https://queueup-e5650.firebaseio.com/', None)
 import requests
 import discord
 import json
 import pprint
 from discord.ext import commands
 from dotenv import load_dotenv
-"""
-#figure way to hide key ----->
-authentication = FirebaseAuthentication('PRIVATE_KEY', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
-app.authentication = authentication
-user = authentication.get_user()
-"""
-#print(user.firebase_auth_token)
 
-pp = pprint.PrettyPrinter()
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
 #client = discord.Client()
 bot = commands.Bot(command_prefix='!')
+pp = pprint.PrettyPrinter()
 
-guild = ''
+guild = '' #guild the bot and users belong to (channel)
 msg = '' #msg that holds reactions and changes when timer runs out/squad is full
 msg_id = 0 #tracks reactions on specific bot message (<msg.id>)
 num_players = 0 #number of players request at the time of !qUp
@@ -70,48 +58,20 @@ def get_member_list(members):
     #-discord avatar
     #handle inactive users differently? nu
     inactive = 0
-    #member_attributes = []
-    # class member:
-    #     avatar = 'https://cdn.discordapp.com/avatars/' + member.discriminator + '/' + member.avatar + '.png'
-    #     discordName = ''
-    #     discordTag = 0
-    #     looking = False
-    #
-    #     def member(avatar, discordName, discordTag, looking):
-    #         self.avatar = avatar
-    #         self.discordName = discordName
     membersN = []
     i = 0
     for member in members:
         i += 1
-        #member_attributes.append(member.display_name)
-        #member_attributes.append(member.activity)
-        #member_attributes.append(member.discriminator) #tag
         #loop through user_ids and compare to get eagerness
         eagerness = False
         for id in user_ids:
             if id == member.id or id == author.id:
                 eagerness = True
-        #member_attributes.append(eagerness) #eagerness
         inmember = {"discordName": member.display_name, "discordTag": member.discriminator, 'avatarURL':  ('https://cdn.discordapp.com/avatars/' + str(member.discriminator) + '/' + str(member.avatar) + '.png'), "looking":False }
         membersN.append(inmember)
     print(membersN)
     r = requests.post('http://www.queueUp.tech/user', json=membersN)
     print(r.status_code) #console log
-        #member_attributes.append(guild) #server => same for everyone
-        #member_attributes.append(member.avatar) #avatar
-        #randomly generate key on names
-        #print(type(member_attributes[0]))
-        #result = app.post('/users', member.display_name, data={'authoToken': member.display_name, 'avatar': 'https://cdn.discordapp.com/avatars/' + member.discriminator + '/' + member.avatar + '.png', 'discordName': member.display_name, 'discordTag': member.discriminator, 'looking': eagerness})
-        #result = app.post('/users', member.display_name)
-        #result = app.get('/users', None)
-
-        #print(result)
-        # if member.activity is None:
-        #     inactive += 1
-        #else:
-        #pp.pprint(member_attributes)
-        #pp.pprint(attributes[member][])
 
     pp.pprint(f'inactive players {inactive}')
 
@@ -123,10 +83,8 @@ async def on_ready():
         f'{bot.user.name} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
-    #get_member_list(guild.members) #getting guild members on startup?
 
 def get_emoji(number_of_players):
-    #await msg.clear_reactions()
     #lovely block of garbage :)
     if number_of_players == 0:
         return '0⃣'
@@ -200,9 +158,6 @@ async def queue_up(ctx, game, number_of_players: int):
 
     get_member_list(guild.members) #getting guild memebers on !qUp ... call
 
-    #def check(activity, user):
-    #    return
-
 @bot.event
 async def on_raw_reaction_add(payload):
     global msg
@@ -233,9 +188,6 @@ async def on_raw_reaction_add(payload):
             num_players -= 1
             emoji = get_emoji(num_players)
             await msg.add_reaction(emoji)
-        #num_players -= 1
-        #get_emoji(num_players)
-        #queue_up.invoke
 
 @queue_up.error
 async def queue_up_error(ctx, error):
@@ -244,9 +196,3 @@ async def queue_up_error(ctx, error):
 
 #keep this at the bottom
 bot.run(TOKEN)
-"""
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-"""
