@@ -126,7 +126,7 @@ async def queue_up(ctx, game, number_of_players: int):
     num_players = number_of_players - 1
     author = ctx.author
     game_name = game
-    text = f'{ctx.author} wants {number_of_players} people to play {game}!'
+    text = f'{author} wants {number_of_players} people to play {game}!\nGo to http://www.queueup.tech/party?user={author.display_name}&tag={author.discriminator} to view your party.'
     msg = await ctx.send(text)
 
     #lovely block of garbage :)
