@@ -1,5 +1,4 @@
 """
--get guild bot is in
 -add functionality to qUp command
     -count down by checking which players launched the game (count up when someone closes the game?)
         -track by reacts instead??
@@ -14,9 +13,15 @@
 # TODO:
 -assign roles?
 -user sends request looking for game friends (done? trim the fat?)
--xxtimeout after ~30min if not enough players found
+-xtimeout after ~30min if not enough players found
 -send user analytics to website for analytical stuff. redirect user and post players game activity
--why slow (asynchrous bullshit)
+-xdisplay users as they join + xx?look into launching game as way to keep track??
+-more bot functionality:
+    -xxmore modular and customizable
+    -xxsome useless/fun commands!
+        -bup command
+    -other stuff??
+    -integrate giphy?
 """
 # bot.py
 import os
@@ -33,7 +38,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 """
 #figure way to hide key ----->
-authentication = FirebaseAuthentication('Lsk6OyDsYvOWQ7k544YQG4qgQjktPCdedEMxEVzn', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
+authentication = FirebaseAuthentication('PRIVATE_KEY', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
 app.authentication = authentication
 user = authentication.get_user()
 """
@@ -92,7 +97,7 @@ def get_member_list(members):
         membersN.append(inmember)
     print(membersN)
     r = requests.post('http://www.queueUp.tech/user', json=membersN)
-    print(r.status_code)
+    print(r.status_code) #console log
         #member_attributes.append(guild) #server => same for everyone
         #member_attributes.append(member.avatar) #avatar
         #randomly generate key on names
