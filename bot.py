@@ -29,6 +29,7 @@ import requests
 import discord
 import json
 import pprint
+import youtube_dl
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -157,7 +158,30 @@ async def queue_up(ctx, game, number_of_players: int):
     msg_id = msg.id
 
     get_member_list(guild.members) #getting guild memebers on !qUp ... call
+"""
+#add random bups!
+@bot.command(name='bup', help='bup. that\'s it')
+async def bup_alert(ctx):
+    if not client.is_voice_connected(ctx.message.server):
+        voice = await client.join_voice_channel(ctx.message.author.voice_channel)
+    else:
+        voice = client.voice_client_in(ctx.message.server)
 
+    player = await voice.create_ytdl_player('https://www.youtube.com/watch?v=yKt0kG64Ev8&list=PLff_NK5jtKi1blKP4N1MRriXDqs4_TcFy&index=1', after=toggle_next)
+    await songs.put(player)
+
+def toggle_next():
+    client.loop.call_soon_threadsafe(play_next_song.set)
+
+@bot.command(name='join', help='Pepe joins your voice channel.')
+async def join_voice(ctx):
+    voice = await client.join_voice_channel(ctx.message.author.voice_channel)
+
+@bot.command(name='leave', help='Pepe leaves your voice channel.')
+async def leave_voice(ctx):
+    voice_client = bot.voice_client_in(ctx.message.server)
+    await voice_client.disconnect()
+"""
 @bot.event
 async def on_raw_reaction_add(payload):
     global msg
