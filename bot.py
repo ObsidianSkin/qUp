@@ -21,15 +21,19 @@
 import os
 #import sys
 #sys.path.append('/Pyrebase/')
-from firebase import firebase
-firebase = firebase.FirebaseApplication('https://queueup-e5650.firebaseio.com/', None)
+from firebase.firebase import FirebaseApplication
+from firebase.firebase import FirebaseAuthentication
+app = FirebaseApplication('https://queueup-e5650.firebaseio.com/', None)
 import discord
 import pprint
 from discord.ext import commands
 from dotenv import load_dotenv
 
-authentication = firebase.FirebaseAuthentication('AIzaSyCY7rglQ23zGMqKxGzz8gweUX__BszC0Y0', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
-firebase.authentication = authentication
+authentication = FirebaseAuthentication('Lsk6OyDsYvOWQ7k544YQG4qgQjktPCdedEMxEVzn', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
+app.authentication = authentication
+user = authentication.get_user()
+
+#print(user.firebase_auth_token)
 
 pp = pprint.PrettyPrinter()
 load_dotenv()
@@ -73,7 +77,7 @@ def get_member_list(members):
         member_attributes.append(member.avatar) #avatar
         #randomly generate key on names
         #result = firebase.post('/users', str(member_attributes[0]), {'authoToken' : str(member_attributes[0])} {'avatar' : 'https://cdn.discordapp.com/avatars/' + str(member.id) + '/' + str(member.avatar) + '.png'}, {'discordName' : str(member_attributes[0])}, {'discordTag' : int(member_attributes[2])}, {'looking' : bool(member_attributes[3])})
-        result = firebase.get('/users', None)
+        result = app.get('/users', None)
         print(result)
         if member.activity is None:
             inactive += 1
