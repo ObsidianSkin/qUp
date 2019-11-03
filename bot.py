@@ -70,48 +70,19 @@ def get_member_list(members):
     #-discord avatar
     #handle inactive users differently? nu
     inactive = 0
-    #member_attributes = []
-    # class member:
-    #     avatar = 'https://cdn.discordapp.com/avatars/' + member.discriminator + '/' + member.avatar + '.png'
-    #     discordName = ''
-    #     discordTag = 0
-    #     looking = False
-    #
-    #     def member(avatar, discordName, discordTag, looking):
-    #         self.avatar = avatar
-    #         self.discordName = discordName
     membersN = []
-    i = 0
     for member in members:
-        i += 1
-        #member_attributes.append(member.display_name)
-        #member_attributes.append(member.activity)
-        #member_attributes.append(member.discriminator) #tag
-        #loop through user_ids and compare to get eagerness
-        eagerness = False
+        looking = False
         for id in user_ids:
             if id == member.id or id == author.id:
-                eagerness = True
-        #member_attributes.append(eagerness) #eagerness
-        inmember = {"discordName": member.display_name, "discordTag": member.discriminator, 'avatarURL':  ('https://cdn.discordapp.com/avatars/' + str(member.discriminator) + '/' + str(member.avatar) + '.png'), "looking":False }
+                looking = True
+
+        inmember = {"discordName": member.display_name, "discordTag": member.discriminator, 'avatarURL':  ('https://cdn.discordapp.com/avatars/' + str(member.id) + '/' + str(member.avatar) + '.png'), "looking":looking }
         membersN.append(inmember)
+
     print(membersN)
     r = requests.post('http://www.queueUp.tech/user', json=membersN)
     print(r.status_code) #console log
-        #member_attributes.append(guild) #server => same for everyone
-        #member_attributes.append(member.avatar) #avatar
-        #randomly generate key on names
-        #print(type(member_attributes[0]))
-        #result = app.post('/users', member.display_name, data={'authoToken': member.display_name, 'avatar': 'https://cdn.discordapp.com/avatars/' + member.discriminator + '/' + member.avatar + '.png', 'discordName': member.display_name, 'discordTag': member.discriminator, 'looking': eagerness})
-        #result = app.post('/users', member.display_name)
-        #result = app.get('/users', None)
-
-        #print(result)
-        # if member.activity is None:
-        #     inactive += 1
-        #else:
-        #pp.pprint(member_attributes)
-        #pp.pprint(attributes[member][])
 
     pp.pprint(f'inactive players {inactive}')
 
@@ -124,6 +95,18 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
     #get_member_list(guild.members) #getting guild members on startup?
+
+##################
+    # debug
+    try:
+        get_member_list(guild.members) #updating member list (+1 interested player)
+    except:
+        pass
+    while(True):
+        block = input('try again')
+        get_member_list(guild.members) #updating member list (+1 interested player)
+
+
 
 def get_emoji(number_of_players):
     #await msg.clear_reactions()
