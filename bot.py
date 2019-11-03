@@ -16,23 +16,27 @@
 -user sends request looking for game friends (done? trim the fat?)
 -xxtimeout after ~30min if not enough players found
 -send user analytics to website for analytical stuff. redirect user and post players game activity
+-why slow (asynchrous bullshit)
 """
 # bot.py
 import os
 #import sys
 #sys.path.append('/Pyrebase/')
-from firebase.firebase import FirebaseApplication
-from firebase.firebase import FirebaseAuthentication
-app = FirebaseApplication('https://queueup-e5650.firebaseio.com/', None)
+#from firebase.firebase import FirebaseApplication
+#from firebase.firebase import FirebaseAuthentication
+#app = FirebaseApplication('https://queueup-e5650.firebaseio.com/', None)
+import requests
 import discord
+import json
 import pprint
 from discord.ext import commands
 from dotenv import load_dotenv
-
+"""
+#figure way to hide key ----->
 authentication = FirebaseAuthentication('Lsk6OyDsYvOWQ7k544YQG4qgQjktPCdedEMxEVzn', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
 app.authentication = authentication
 user = authentication.get_user()
-
+"""
 #print(user.firebase_auth_token)
 
 pp = pprint.PrettyPrinter()
@@ -61,26 +65,45 @@ def get_member_list(members):
     #-discord avatar
     #handle inactive users differently? nu
     inactive = 0
+    #member_attributes = []
+    # class member:
+    #     avatar = 'https://cdn.discordapp.com/avatars/' + member.discriminator + '/' + member.avatar + '.png'
+    #     discordName = ''
+    #     discordTag = 0
+    #     looking = False
+    #
+    #     def member(avatar, discordName, discordTag, looking):
+    #         self.avatar = avatar
+    #         self.discordName = discordName
+    membersN = []
+    i = 0
     for member in members:
-        member_attributes = []
-        member_attributes.append(member.display_name)
-        member_attributes.append(member.activity)
-        member_attributes.append(member.discriminator) #tag
+        i += 1
+        #member_attributes.append(member.display_name)
+        #member_attributes.append(member.activity)
+        #member_attributes.append(member.discriminator) #tag
         #loop through user_ids and compare to get eagerness
         eagerness = False
         for id in user_ids:
             if id == member.id or id == author.id:
                 eagerness = True
-        member_attributes.append(eagerness) #eagerness
-
-        member_attributes.append(guild) #server => same for everyone
-        member_attributes.append(member.avatar) #avatar
+        #member_attributes.append(eagerness) #eagerness
+        inmember = {"discordName": member.display_name, "discordTag": member.discriminator, 'avatarURL':  ('https://cdn.discordapp.com/avatars/' + str(member.discriminator) + '/' + str(member.avatar) + '.png'), "looking":False }
+        membersN.append(inmember)
+    print(membersN)
+    r = requests.post('http://www.queueUp.tech/user', json=membersN)
+    print(r.status_code)
+        #member_attributes.append(guild) #server => same for everyone
+        #member_attributes.append(member.avatar) #avatar
         #randomly generate key on names
-        #result = firebase.post('/users', str(member_attributes[0]), {'authoToken' : str(member_attributes[0])} {'avatar' : 'https://cdn.discordapp.com/avatars/' + str(member.id) + '/' + str(member.avatar) + '.png'}, {'discordName' : str(member_attributes[0])}, {'discordTag' : int(member_attributes[2])}, {'looking' : bool(member_attributes[3])})
-        result = app.get('/users', None)
-        print(result)
-        if member.activity is None:
-            inactive += 1
+        #print(type(member_attributes[0]))
+        #result = app.post('/users', member.display_name, data={'authoToken': member.display_name, 'avatar': 'https://cdn.discordapp.com/avatars/' + member.discriminator + '/' + member.avatar + '.png', 'discordName': member.display_name, 'discordTag': member.discriminator, 'looking': eagerness})
+        #result = app.post('/users', member.display_name)
+        #result = app.get('/users', None)
+
+        #print(result)
+        # if member.activity is None:
+        #     inactive += 1
         #else:
         #pp.pprint(member_attributes)
         #pp.pprint(attributes[member][])
