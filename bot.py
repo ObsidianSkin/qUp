@@ -8,12 +8,13 @@
 -bots own channel? only handles 1 queue at a time??
 -clean up qup
 -react with role to recieve challenel notifications? or only for specific games? => how?
+-or just recieve notification all the time??
 -send message when someone starts a game and listen for those messages? => also how
 
 # TODO:
 -assign roles?
 -user sends request looking for game friends (done? trim the fat?)
--timeout after ~30min if not enough players found
+-xxtimeout after ~30min if not enough players found
 -send user analytics to website for analytical stuff. redirect user and post players game activity
 """
 # bot.py
@@ -26,6 +27,9 @@ import discord
 import pprint
 from discord.ext import commands
 from dotenv import load_dotenv
+
+authentication = firebase.FirebaseAuthentication('AIzaSyCY7rglQ23zGMqKxGzz8gweUX__BszC0Y0', 'cchildr3@vols.utk.edu', extra={'id': 537376993401})
+firebase.authentication = authentication
 
 pp = pprint.PrettyPrinter()
 load_dotenv()
@@ -67,13 +71,14 @@ def get_member_list(members):
 
         member_attributes.append(guild) #server => same for everyone
         member_attributes.append(member.avatar) #avatar
-
-
-
+        #randomly generate key on names
+        #result = firebase.post('/users', str(member_attributes[0]), {'authoToken' : str(member_attributes[0])} {'avatar' : 'https://cdn.discordapp.com/avatars/' + str(member.id) + '/' + str(member.avatar) + '.png'}, {'discordName' : str(member_attributes[0])}, {'discordTag' : int(member_attributes[2])}, {'looking' : bool(member_attributes[3])})
+        result = firebase.get('/users', None)
+        print(result)
         if member.activity is None:
             inactive += 1
         #else:
-        pp.pprint(member_attributes)
+        #pp.pprint(member_attributes)
         #pp.pprint(attributes[member][])
 
     pp.pprint(f'inactive players {inactive}')
